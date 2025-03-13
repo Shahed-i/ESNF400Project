@@ -4,13 +4,16 @@ FROM python:3.10
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy all files from your local project to the container
+# Copy only Pipfile and Pipfile.lock first
+COPY Pipfile Pipfile.lock .  
+
+# Install Pipenv and dependencies
+RUN pip install --no-cache-dir pipenv && pipenv install --deploy --ignore-pipfile
+
+docker build -t my-app .
 COPY . .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Expose port (if the app runs on a port, e.g., Flask/Django)
+# Expose port (modify based on your app)
 EXPOSE 5000
 
 # Define the command to run the application
